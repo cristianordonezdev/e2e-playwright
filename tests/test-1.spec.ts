@@ -1,25 +1,28 @@
-import { test, Browser, Page, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-(async () => {
-  let browser: Browser;
-  let page: Page;
+test.describe('Navegation en www.freerangetesters.com', () => {
+  const sections = [
+    { name: 'Cursos', url: '/cursos', titleExpected: 'Cursos' },
+    { name: 'Udemy', url: '/udemy', titleExpected: 'Udemy' },
+    { name: 'Recursos', url: '/recursos', titleExpected: 'Recursos' },
+  ];
 
-  test.describe('Navegation en www.freerangetesters.com', () => {
-    test('open links', async ({ page }) => {
-      await test.step('Go to the page ', async () => {
-        page.goto('https://www.freerangetesters.com/')
-        await expect(page).toHaveTitle('Free Range Testers')
-      })
+  for (const section of sections) {
+    test(`Validation for redirecting to the section ${section.name}`, async ({ page }) => {
+      await test.step('Go to the principal page', async () => {
+        await page.goto('https://www.freerangetesters.com/');
+        await expect(page).toHaveTitle('Free Range Testers');
+      });
 
-      await test.step('Click on the link "Cursos"', async () => {
-        page.locator('#page_header').getByRole('link', { name: 'Cursos', exact: true }).click()
-        await page.waitForURL("**/cursos")
-      })
+      await test.step(`When it does click to "${section.name}"`, async () => {
+        await page.locator('#page_header').getByRole('link', { name: section.name, exact: true }).click();
+        await page.waitForURL(`**${section.url}`);
+      });
 
-      await test.step('Click on the link "Blog"', async () => {
-        await expect(page).toHaveTitle("Cursos")
-        console.log('clicking here')
-      })
-    })
-  })
-})();
+      await test.step(`Click on the link "${section.titleExpected}"`, async () => {
+        await expect(page).toHaveTitle(section.titleExpected);
+        console.log('clicking here');
+      });
+    });
+  }
+});
