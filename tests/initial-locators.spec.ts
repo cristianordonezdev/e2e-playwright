@@ -8,7 +8,7 @@ test.describe('Navegation en www.freerangetesters.com', () => {
   ];
 
   for (const section of sections) {
-    test(`Validation for redirecting to the section ${section.name}`, async ({ page }) => {
+    test(`Val'idation for redirecting to the section ${section.name}`, async ({ page }) => {
       await test.step('Go to the principal page', async () => {
         await page.goto('https://www.freerangetesters.com/');
         await expect(page).toHaveTitle('Free Range Testers');
